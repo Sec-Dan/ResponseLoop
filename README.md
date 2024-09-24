@@ -1,5 +1,17 @@
 [View Cybersecurity Incident Cycle](diagram.html)
 
+```mermaid
+graph LR
+    A[Preparation] --> B[Detection & Identification]
+    B --> C[Containment]
+    C --> D[Data Gathering]
+    D --> E[Analysis]
+    E --> F[Remediation]
+    F --> G[Recovery]
+    G --> H[Cleanup]
+    H --> I[Post-Incident Review]
+    I --> A
+```
 ### 1. **Preparation**
 
 **Goal**: Ensure your organisation is ready to handle cybersecurity incidents through policies, training, and security tools.

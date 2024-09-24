@@ -1,4 +1,4 @@
-[View Cybersecurity Incident Cycle](diagram.html)
+[View ResponseLoop Cycle](https://sec-dan.github.io/ResponseLoop/diagram.html)
 
 ```mermaid
 graph LR

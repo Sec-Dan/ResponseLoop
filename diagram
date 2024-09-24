@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResponseCycle</title>
+    <style>
+        text {
+            font-family: Arial, sans-serif;
+            fill: white;
+        }
+        .node {
+            fill: steelblue;
+            stroke: black;
+            stroke-width: 2px;
+        }
+        .arrow {
+            fill: none;
+            stroke: #999;
+            stroke-width: 2px;
+            marker-end: url(#arrowhead);
+        }
+    </style>
+</head>
+<body>
+
+    <svg width="800" height="800" viewBox="0 0 800 800">
+        <!-- Define the arrowhead marker -->
+        <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#999" />
+            </marker>
+        </defs>
+
+        <!-- Circle properties -->
+        <script>
+            // Define the center and radius of the circle
+            var centerX = 400, centerY = 400, radius = 250;
+            var circleRadius = 50; // Radius of each node circle
+            // Total number of nodes
+            var totalNodes = 9;
+            // Angle step (in radians)
+            var angleStep = (2 * Math.PI) / totalNodes;
+
+            // Corrected order of nodes in clockwise direction
+            var nodes = [
+                {id: "Preparation"},               // 12 o'clock
+                {id: "Detection & Identification"},// 1-2 o'clock
+                {id: "Containment"},               // 3 o'clock
+                {id: "Data Gathering"},            // 4-5 o'clock
+                {id: "Analysis"},                  // 6 o'clock
+                {id: "Remediation"},               // 7-8 o'clock
+                {id: "Recovery"},                  // 9 o'clock
+                {id: "Cleanup"},                   // 10-11 o'clock
+                {id: "Post-Incident Review"}        // Before Preparation
+            ];
+
+            // Calculate the positions of the nodes
+            nodes.forEach(function(d, i) {
+                var angle = (i * angleStep) - Math.PI / 2; // Starting at the top (12 o'clock)
+                d.x = centerX + radius * Math.cos(angle);
+                d.y = centerY + radius * Math.sin(angle);
+            });
+        </script>
+
+        <!-- Draw the nodes and arrows dynamically -->
+        <script>
+            // Add circles (nodes)
+            var svg = document.querySelector('svg');
+            nodes.forEach(function(d) {
+                // Draw node circle
+                var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', d.x);
+                circle.setAttribute('cy', d.y);
+                circle.setAttribute('r', circleRadius);
+                circle.setAttribute('class', 'node');
+                svg.appendChild(circle);
+
+                // Add text label for the node
+                var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', d.x);
+                text.setAttribute('y', d.y + 5); // Slight offset for vertical alignment
+                text.setAttribute('text-anchor', 'middle');
+                text.textContent = d.id;
+                svg.appendChild(text);
+            });
+
+            // Add arrows between nodes
+            for (var i = 0; i < totalNodes; i++) {
+                var source = nodes[i];
+                var target = nodes[(i + 1) % totalNodes]; // Circular linking
+
+                var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+                // Vector from source to target
+                var dx = target.x - source.x;
+                var dy = target.y - source.y;
+                var distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Calculate the starting point (from the edge of the source node)
+                var startX = source.x + (dx / distance) * circleRadius;
+                var startY = source.y + (dy / distance) * circleRadius;
+
+                // Calculate the ending point (at the edge of the target node)
+                var endX = target.x - (dx / distance) * circleRadius;
+                var endY = target.y - (dy / distance) * circleRadius;
+
+                line.setAttribute('x1', startX);
+                line.setAttribute('y1', startY);
+                line.setAttribute('x2', endX);
+                line.setAttribute('y2', endY);
+                line.setAttribute('class', 'arrow');
+                svg.appendChild(line);
+            }
+        </script>
+
+    </svg>
+</body>
+</html>
